@@ -10,8 +10,10 @@ pipeline {
 
         stage('Deploy Application') {
             steps {
-                // Windows batch command to copy index.html to your local web directory
-                bat 'copy /Y index.html C:\\inetpub\\wwwroot\\'
+                bat '''
+                    if not exist C:\\inetpub\\wwwroot mkdir C:\\inetpub\\wwwroot
+                    copy /Y index.html C:\\inetpub\\wwwroot\\
+                '''
             }
         }
     }
