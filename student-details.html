@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Details</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: "Segoe UI", sans-serif;
+            color: #202a29;
+            background: #f4f6f2;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 48px 20px;
+            background: linear-gradient(135deg, #f4f6f2 0%, #e7efeb 100%);
+        }
+
+        main {
+            width: min(760px, 100%);
+            margin: 0 auto;
+        }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            color: #28705d;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-family: Georgia, serif;
+            font-size: 2.4rem;
+            font-weight: 500;
+        }
+
+        .intro {
+            margin: 10px 0 28px;
+            color: #53615d;
+        }
+
+        section {
+            padding: 24px;
+            border: 1px solid #d7e0db;
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        h2 {
+            margin: 0 0 20px;
+            font-size: 1.1rem;
+        }
+
+        .fields {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        label {
+            display: grid;
+            gap: 7px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        input,
+        select {
+            width: 100%;
+            min-height: 42px;
+            padding: 9px 11px;
+            border: 1px solid #bac8c1;
+            border-radius: 4px;
+            background: #fff;
+            color: inherit;
+            font: inherit;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 3px solid #c8e3d7;
+            border-color: #28705d;
+        }
+
+        button {
+            min-height: 42px;
+            margin-top: 20px;
+            padding: 0 18px;
+            border: 0;
+            border-radius: 4px;
+            background: #236552;
+            color: #fff;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #194d3e;
+        }
+
+        .records {
+            margin-top: 24px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 11px 8px;
+            border-bottom: 1px solid #e1e8e4;
+            white-space: nowrap;
+        }
+
+        th {
+            color: #53615d;
+            font-size: 0.8rem;
+        }
+
+        #notice {
+            min-height: 1.4em;
+            margin: 12px 0 0;
+            color: #236552;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 560px) {
+            body {
+                padding: 32px 16px;
+            }
+
+            section {
+                padding: 18px;
+            }
+
+            .fields {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <p class="eyebrow">Student Management</p>
+        <h1>Student details</h1>
+        <p class="intro">Add a student and review the entries below.</p>
+
+        <section aria-labelledby="form-heading">
+            <h2 id="form-heading">Add student</h2>
+            <form id="student-form">
+                <div class="fields">
+                    <label for="student-id">Student ID
+                        <input id="student-id" name="studentId" required>
+                    </label>
+                    <label for="student-name">Full name
+                        <input id="student-name" name="name" autocomplete="name" required>
+                    </label>
+                    <label for="student-email">Email
+                        <input id="student-email" name="email" type="email" autocomplete="email" required>
+                    </label>
+                    <label for="student-course">Course
+                        <select id="student-course" name="course" required>
+                            <option value="" selected disabled>Select a course</option>
+                            <option>Computer Science</option>
+                            <option>Business</option>
+                            <option>Engineering</option>
+                            <option>Arts and Humanities</option>
+                        </select>
+                    </label>
+                </div>
+                <button type="submit">Add student</button>
+                <p id="notice" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <section class="records" aria-labelledby="records-heading">
+            <h2 id="records-heading">Students</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Student ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Course</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-list"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script>
+        const form = document.querySelector("#student-form");
+        const studentList = document.querySelector("#student-list");
+        const notice = document.querySelector("#notice");
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const values = new FormData(form);
+            const row = document.createElement("tr");
+
+            for (const field of ["studentId", "name", "email", "course"]) {
+                const cell = document.createElement("td");
+                cell.textContent = values.get(field);
+                row.append(cell);
+            }
+
+            studentList.append(row);
+            form.reset();
+            notice.textContent = "Student added.";
+        });
+    </script>
+</body>
+</html>
